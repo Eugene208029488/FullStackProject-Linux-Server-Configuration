@@ -25,36 +25,21 @@ ssh -i .ssh/udacity_key.rsa root@54.70.30.46
 ```
 
 #### 2. Create a new user named grader and grant this user sudo permissions
-Created a new user named **grader** using the following command:
-```
-sudo adduser grader
-```
-Then provide sudo access by creating the following file
-```
-sudo nano /etc/sudoers.d/grader
-```
-with the following content
-```
-grader ALL=(ALL) PASSWD:ALL
-```
+1. Created a new user named **grader** using the following command:
+  `$ sudo adduser grader`
+2. Provide sudo access by creating the following file
+  `$ sudo nano /etc/sudoers.d/grader`
+3. Add the following content
+  ```
+  grader ALL=(ALL) PASSWD:ALL
+  ```
 
-#### 3. Disable remote login for root user
-To disable root user login, edited **/etc/ssh/sshd_config** file, and changed line:
-```
-PermitRootLogin without-password
-```
-to
-```
-PermitRootLogin no
-```
-Then we need to restart SSH with `service ssh restart`.
-
-#### 4. Ensure users have a secure password
-Installed *libpam-cracklib* to ensure secure passwords:
-```
-sudo apt-get install libpam-cracklib
-```
-Then I updated **/etc/pam.d/common-password** file, by adding following line:
+#### 3. Ensure users have a secure password
+1. Installed *libpam-cracklib* to ensure secure passwords:
+  `$ sudo apt-get install libpam-cracklib`
+2. Update **/etc/pam.d/common-password** file:
+  `$ sudo nano /etc/pam.d/common-password`
+3. Add the following line
 ```
 password requisite pam_cracklib.so try_first_pass retry=3 minlength=12 lcredit=1 ucredit=1 dcredit=1 ocredit=1 difok=4
 ```
@@ -66,93 +51,67 @@ password requisite pam_cracklib.so try_first_pass retry=3 minlength=12 lcredit=1
 * **ocredit**: sets the minimum number of required other characters
 * **difok**: sets the number of characters that must be different from those in the previous password
 
-#### 5. Configure the local timezone to UTC
-Changed EC2 instance time zone to UTC:
-```
-sudo dpkg-reconfigure tzdata
-```
+#### 4. Configure the local timezone to UTC
+1. Changed EC2 instance time zone to UTC:
+  `$ sudo dpkg-reconfigure tzdata`
 
-#### 6. Adding Key Based login to new user **grader**
-Changed from root user to grader user:
-```
-su - grader
-```
-Then added directory **.ssh** with
-```
-mkdir .ssh
-```
-Added file **.ssh/authorized_keys** and copied ssh public key contents of udacity_key to **authorized_keys**, and finally restricted permissions to .ssh and authorized_keys:
-```
-chmod 700 .ssh
-chmod 644 .ssh/authorized_keys
-```
+#### 5. Adding Key Based login to new user **grader**
+1. Changed from root user to grader user:
+  `$ su - grader`
+2. Create .ssh directoy
+  `$ mkdir .ssh`
+3. Added file **.ssh/authorized_keys** and copied ssh public key contents of udacity_key to **authorized_keys**:
+  `$ nano .ssh/authorized_keys`
+4. Restricted permissions to .ssh and authorized_keys:
+  `$ chmod 700 .ssh`
+  `$ chmod 644 .ssh/authorized_keys`
 
-#### 7. Forcing Key Based Authentication
-To force key based authentication edited **/etc/ssh/sshd_config** file from
-```
-PasswordAuthentication yes
-```
-to
-```
-PasswordAuthentication no
-```
-Then, restarted ssh service:
-```
-sudo service ssh restart
-```
 
-#### 8. SSH is hosted on non-default port
-To host SSH on non-default port 22, edited **/etc/ssh/sshd_config** file from
-```
-Port 22
-```
-to
-```
-Port 2200
-```
-And finally restarted ssh service:
-```
-sudo service ssh restart
-```
+#### 6. Update SSH settings
+1. Update sshd_config file:
+  `$ sudo nano /etc/ssh/sshd_config`
+2. To disable remote login for root user:
+  ```
+  Update PermitRootLogin without-password to PermitRootLogin no
+  ```
+3. To host SSH on non-default port 2200:
+  ```
+  Update PasswordAuthentication yes to PasswordAuthentication no
+  ```
+4. To host SSH on non-default port 2200:
+  ```
+  Update Port 22 to Port 2200
+  ```
+5. Restart SSH service
+  `$ sudo service ssh restart`
 
-#### 9. Configure the Uncomplicated Firewall (UFW)
+
+#### 7. Configure the Uncomplicated Firewall (UFW)
 To setup UFW, first I check firewall status with:
-```
-sudo ufw status
-```
-Then, to deny incoming traffic:
-```
-sudo ufw default deny incoming
-```
-And allow outgoing traffic:
-```
-sudo ufw default allow outgoing
-```
-And finally start establishing rules. For SSH (port 2200):
-```
-sudo ufw allow 2200/tcp
-```
-For HTTP (port 80):
-```
-sudo ufw allow www
-```
-And for NTP (port 123):
-```
-sudo ufw allow ntp
-```
-And finally to enable UFW:
-```
-sudo ufw enable
-```
 
-#### 10. Update all currently installed packages
-Updated all currently installed applications:
+1. Check current firewall status:
+  `$ sudo ufw status`
+2. Deny incoming traffic:
+  `$ sudo ufw default deny incoming`
+3. Allow outgoing traffic:
+  `$ sudo ufw default allow outgoing`
+4. Establish rules. For SSH (port 2200):
+  `$ sudo ufw allow 2200/tcp`
+5. Establish rules. For HTTP (port 80):
+  `$ sudo ufw allow www`
+6. Establish rules. For NTP (port 123):
+  `$ sudo ufw allow ntp`
+7. Enable UFW:
+  `$ sudo ufw enable`
+
+
+#### 8. Update all currently installed packages
 1. Update the list of available packages and their versions:
   `$ sudo apt-get update`
 2. Install newer vesions of packages you have:
   `$ sudo sudo apt-get upgrade`
 
-#### 11. Install and configure Apache to serve a Python mod_wsgi application
+#### 9. Install and configure Apache to serve a Python mod_wsgi application
 
 1. Install Apache web server:
   `$ sudo apt-get install apache2`
