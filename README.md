@@ -269,26 +269,24 @@ password requisite pam_cracklib.so try_first_pass retry=3 minlength=12 lcredit=1
 16. Create postgreSQL database schema:
   $ sudo python database_setup.py
 17. Load application data:
-  $ sudo python database_setup.py
+  $ sudo python loadgrocery.py
 
+#### 6. OAuth-Logins Changes
 
-#### 6. Get OAuth-Logins Working
-
-1. Open http://www.hcidata.info/host2ip.cgi and receive the Host name for your public IP-address, e.g. for 54.70.30.46, its ec2-54-70-30-46.us-west-2.compute.amazonaws.com
+1. Open http://www.hcidata.info/host2ip.cgi and receive the Host name for your public IP-address
 2. Open the Apache configuration files for the web app:
   `$ sudo nano /etc/apache2/sites-available/catalog.conf`
 3. Paste in the following line below ServerAdmin:
   `ServerAlias ec2-54-70-30-46.us-west-2.compute.amazonaws.com`
 4. Enable the virtual host:
   `$ sudo a2ensite catalog`
-5. To get the Google+ authorization working:
-  1. Go to the project on the Developer Console: https://console.developers.google.com/project
+5. Change needed for Google+ authorization to work:
+  1. Add Go to the project on the Developer Console: https://console.developers.google.com/project
   2. Navigate to APIs & auth > Credentials > Edit Settings
   3. add your host name and public IP-address to your Authorized JavaScript origins and your host name + oauth2callback to Authorized redirect URIs, e.g. http://ec2-54-70-30-46.us-west-2.compute.amazonaws.com/oauth2callback
-6. To get the Facebook authorization working:
+6. Changes needed to get Facebook authorization to work:
   1. Go on the Facebook Developers Site to My Apps https://developers.facebook.com/apps/
   2. Click on your App, go to Settings and fill in public IP-Address including prefixed http:// in the Site URL field
-  3. To leave the development mode, so others can login as well, also fill in a contact email address in the respective field, "Save Changes", click on 'Status & Review'
 
 #### 7. - Run application
 1. Restart Apache:
@@ -314,5 +312,4 @@ password requisite pam_cracklib.so try_first_pass retry=3 minlength=12 lcredit=1
 * [How to view Apache log files](https://www.a2hosting.com/kb/developer-corner/apache-web-server/viewing-apache-log-files)
 * [OAuth Provider callback uris](http://discussions.udacity.com/t/oauth-provider-callback-uris/20460)
 * [Name-based Virtual Host Support](http://httpd.apache.org/docs/2.2/en/vhosts/name-based.html)
-
 
