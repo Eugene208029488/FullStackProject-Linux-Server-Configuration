@@ -87,7 +87,6 @@ password requisite pam_cracklib.so try_first_pass retry=3 minlength=12 lcredit=1
 
 
 #### 7. Configure the Uncomplicated Firewall (UFW)
-To setup UFW, first I check firewall status with:
 
 1. Check current firewall status:
   `$ sudo ufw status`
