@@ -8,7 +8,9 @@ This project will take a baseline installation of a Linux distribution on a virt
 |IP Address|54.70.30.46|
 |SSH Port|2200|
 |Username|grader|
+|sudo password|Ahok123gradeR$|
 |URL of Application|[http://ec2-54-70-30-46.us-west-2.compute.amazonaws.com](http://ec2-54-70-30-46.us-west-2.compute.amazonaws.com)|
+
 
 
 To connect to EC2 instance you need the udacity_key.rsa (supplied separately in the submit process):
